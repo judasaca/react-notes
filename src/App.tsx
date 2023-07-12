@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import Alert from "./components/Alert";
 import CustomButton from "./components/Button";
-
+import CustomListGroup from "./components/CustomListGroup";
 function App() {
   const items = ["bogotá", "cali", "neiva", "manizales", "bucaramanga"];
 
@@ -21,6 +21,11 @@ function App() {
       <CustomButton color="dark" onClick={() => changeDisplay(true)}>
         Warning
       </CustomButton>
+      <CustomListGroup
+        items={items}
+        onSelectItem={handleSelectItem}
+        heading="LIST"
+      ></CustomListGroup>
     </>
   );
 }

@@ -1,7 +1,7 @@
 import "./App.css";
-
+import ParentElement from "./components/SharingState/ParentElement";
 function App() {
-  return <div></div>;
+  return <ParentElement />;
 }
 
 export default App;

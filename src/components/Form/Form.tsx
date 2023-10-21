@@ -1,35 +1,51 @@
-import { FormEvent, useRef } from "react";
+import { FieldValues, useForm } from "react-hook-form";
+
+interface FormData {
+  name: string;
+  age: number;
+}
 
 const Form = () => {
-  const nameRef = useRef<HTMLInputElement>(null);
-  const ageRef = useRef<HTMLInputElement>(null);
-  const person = {
-    name: "",
-    age: 0,
+  const onSubmit = (data: FieldValues) => {
+    console.log(data);
   };
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    if (nameRef.current !== null) {
-      person.name = nameRef.current.value;
-    }
-    if (ageRef.current !== null) {
-      person.age = parseInt(ageRef.current.value);
-    }
-    console.log(person);
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-3">
         <label htmlFor="name" className="form-label">
           Name
         </label>
-        <input ref={nameRef} id="name" type="text" className="form-control" />
+        <input
+          {...register("name", {
+            required: true,
+            minLength: 3,
+          })}
+          id="name"
+          type="text"
+          className="form-control"
+        />
+        {errors.name?.type === "required" && (
+          <p className="text-danger">Name field is required</p>
+        )}
+        {errors.name?.type === "minLength" && (
+          <p className="text-danger">Name must be at least 3 characters</p>
+        )}
       </div>
       <div className="mb-3">
         <label htmlFor="age" className="form-label">
           Age
         </label>
-        <input ref={ageRef} id="age" type="number" className="form-control" />
+        <input
+          {...register("age", { required: true })}
+          id="age"
+          type="number"
+          className="form-control"
+        />
       </div>
       <button className="btn btn-primary" type="submit">
         Submit

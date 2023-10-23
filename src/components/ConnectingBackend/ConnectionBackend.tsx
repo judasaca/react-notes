@@ -17,8 +17,6 @@ const ConnectionBackend = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    // const fetchUsers = async () => {
-    //   try {
     console.log("SOLICITANDO");
     setIsLoading(true);
     axios

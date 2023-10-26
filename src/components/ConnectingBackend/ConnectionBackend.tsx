@@ -1,10 +1,7 @@
-import axios, { AxiosError, CanceledError } from "axios";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-
-interface User {
-  id: number;
-  name: string;
-}
+import apiClient, { CanceledError } from "../../services/apiClient";
+import userService, { User } from "../../services/user-service";
 
 const ConnectionBackend = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -16,13 +13,9 @@ const ConnectionBackend = () => {
   }, [isLoading]);
 
   useEffect(() => {
-    const controller = new AbortController();
-    console.log("SOLICITANDO");
     setIsLoading(true);
-    axios
-      .get<User[]>("https://jsonplaceholder.typicode.com/users", {
-        signal: controller.signal,
-      })
+    const { request, cancel } = userService.getAllUsers();
+    request
       .then((res) => {
         setUsers(res.data);
         setIsLoading(false);
@@ -34,17 +27,45 @@ const ConnectionBackend = () => {
       });
 
     return () => {
-      controller.abort();
+      cancel();
     };
   }, []);
-
+  const deleteUser = (user: User) => {
+    const originalUsers = [...users];
+    setUsers(users.filter((u) => u.id !== user.id));
+    apiClient.delete("/users/" + user.id).catch((error) => {
+      setUsers(originalUsers);
+      setError(error.message);
+    });
+  };
+  const addUser = () => {
+    const newUser = { id: 0, name: "jd" };
+    setUsers([...users, newUser]);
+    apiClient
+      .post("/users", newUser)
+      .then((res) => setUsers([res.data, ...users]));
+  };
   return (
     <>
       {isLoading && <div className="spinner-border"></div>}
       {error && <p>{error}</p>}
-      <ul>
+      <button className="btn btn-primary mb-3" onClick={addUser}>
+        Add
+      </button>
+      <ul className="list-group">
         {users.map((u) => (
-          <li key={u.id}>{u.name}</li>
+          <li
+            key={u.id}
+            className="list-group-item d-flex justify-content-between"
+          >
+            {u.name}
+            <button
+              className="btn btn-outline-danger"
+              onClick={() => deleteUser(u)}
+            >
+              Eliminar
+            </button>
+          </li>
         ))}
       </ul>
     </>

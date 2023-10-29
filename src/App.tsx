@@ -1,10 +1,14 @@
+import { Link, Outlet } from "react-router-dom";
 import "./App.css";
-import ConnectionBackend from "./components/ConnectingBackend/ConnectionBackend";
-import ExpensesTracker from "./components/Excercises/ExpensesTracker";
 function App() {
   return (
     <div>
-      <ConnectionBackend></ConnectionBackend>
+      <ul className="list-group">
+        <li className="list-group-item">
+          <Link to="excercises/expenses-tracker">Expenses tracker</Link>
+        </li>
+      </ul>
+      <Outlet />
     </div>
   );
 }

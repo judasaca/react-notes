@@ -3,7 +3,7 @@ import axios from "axios";
 const rawApiClient = axios.create({
   baseURL: "https://api.rawg.io/api",
   params: {
-    key: "28d3555ddd534a61bc5acb7020f4cca9",
+    key: "657c0b4489db4f9084af2260f174753e",
   },
 });
 export default rawApiClient;
